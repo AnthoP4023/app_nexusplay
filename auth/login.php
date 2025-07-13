@@ -10,30 +10,32 @@ if (isLoggedIn()) {
 
 $error = '';
 
-if ($_POST) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username']);
-    $password = $_POST['password'];
     
-    if ($username && $password) {
-        $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE username = ? OR email = ?");
-        $stmt->execute([$username, $username]);
-        $user = $stmt->fetch();
+    if (empty($username)) {
+        $error = 'Complete este campo';
+    } else {
+        // VULNERABLE: Consulta SQL SIN prepared statements
+        $password_hash = md5($password);
+        $query = "SELECT * FROM usuarios WHERE username = '$username' OR email = '$username' AND password = '$password_hash'";
         
-        // CAMBIO PRINCIPAL: Usar md5() en lugar de password_verify()
-        if ($user && md5($password) === $user['password']) {
+        // Ejecutar consulta vulnerable
+        $result = $conn->query($query);
+        
+        if ($result && $result->num_rows > 0) {
+            $user = $result->fetch_assoc();
+            
+            // Login exitoso
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['user_type'] = $user['tipo_usuario'];
-            $_SESSION['nombre'] = $user['nombre'];
-            $_SESSION['apellido'] = $user['apellido']; // Agregado para tener el nombre completo
             
             header('Location: ../index.php');
             exit();
         } else {
             $error = 'Usuario o contraseña incorrectos';
         }
-    } else {
-        $error = 'Completa todos los campos';
     }
 }
 ?>
@@ -66,7 +68,7 @@ if ($_POST) {
                     <?php endif; ?>
                     <form method="POST">
                         <input type="text" name="username" placeholder="👤 Usuario o Email" required>
-                        <input type="password" name="password" placeholder="🔒 Contraseña" required>
+                        <input type="password" name="password" placeholder="🔒 Contraseña">
                         <button type="submit">Iniciar Sesión</button>
                     </form>
                     <div class="links">
