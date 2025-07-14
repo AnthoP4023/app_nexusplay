@@ -9,6 +9,8 @@ session_start();
     <title>NexusPlay - Tienda de Videojuegos</title>
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/footer.css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -48,10 +50,6 @@ session_start();
                     <a href="platform.php?platform=xbox" class="platform-card xbox">
                         <i class="fab fa-xbox"></i>
                         <span>Xbox</span>
-                    </a>
-                    <a href="platform.php?platform=nintendo" class="platform-card nintendo">
-                        <i class="fab fa-nintendo-switch"></i>
-                        <span>Nintendo</span>
                     </a>
                 </div>
             </div>

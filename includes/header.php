@@ -10,50 +10,42 @@ require_once 'includes/functions.php';
             <span class="logo-text">NexusPlay</span>
         </div>
 
-        <!-- BUSCADOR -->
-        <div class="search-container">
-            <!-- BÚSQUEDA DESKTOP -->
-            <form class="search-form desktop-search" action="search.php" method="GET">
-                <input type="text" name="q" placeholder="Buscar juegos..." class="search-input">
-                <button type="submit" class="search-btn">
+        <!-- BUSCADOR CON PLATAFORMAS DENTRO -->
+        <div class="search-with-platforms" id="searchWithPlatforms">
+            <!-- Estado inicial: Plataformas + Lupa -->
+            <div class="platforms-inside" id="platformsInside">
+                <a href="platform.php?platform=pc" class="platform-icon">
+                    <i class="fas fa-desktop"></i>
+                    <span>PC</span>
+                </a>
+                <a href="platform.php?platform=playstation" class="platform-icon">
+                    <i class="fab fa-playstation"></i>
+                    <span>PlayStation</span>
+                </a>
+                <a href="platform.php?platform=xbox" class="platform-icon">
+                    <i class="fab fa-xbox"></i>
+                    <span>Xbox</span>
+                </a>
+            </div>
+            
+            <!-- Botón lupa -->
+            <button class="search-trigger-btn" id="searchTriggerBtn" onclick="expandSearchInput()">
+                <i class="fas fa-search"></i>
+            </button>
+            
+            <!-- Input expandido (oculto inicialmente) -->
+            <form class="search-input-form" id="searchInputForm" action="search.php" method="GET" style="display: none;">
+                <input type="text" name="q" placeholder="Buscar juegos..." class="search-input-field" id="searchInputField">
+                <button type="submit" class="search-submit-icon">
                     <i class="fas fa-search"></i>
+                </button>
+                <button type="button" class="search-cancel-btn" onclick="collapseSearchInput()">
+                    <i class="fas fa-times"></i>
                 </button>
             </form>
-            
-            <!-- BÚSQUEDA MÓVIL -->
-            <div class="mobile-search">
-                <button class="search-toggle" onclick="toggleMobileSearch()">
-                    <i class="fas fa-search"></i>
-                </button>
-                <form class="mobile-search-form" id="mobileSearchForm" action="search.php" method="GET">
-                    <input type="text" name="q" placeholder="Buscar juegos..." class="mobile-search-input">
-                    <button type="submit" class="mobile-search-btn">
-                        <i class="fas fa-search"></i>
-                    </button>
-                    <button type="button" class="mobile-search-close" onclick="closeMobileSearch()">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </form>
-            </div>
         </div>
 
-        <!-- PLATAFORMAS (SOLO DESKTOP) -->
-        <div class="platforms-nav desktop-only">
-            <a href="platform.php?platform=pc" class="platform-btn pc" title="PC Gaming">
-                <i class="fas fa-desktop"></i>
-                <span>PC</span>
-            </a>
-            <a href="platform.php?platform=playstation" class="platform-btn ps" title="PlayStation">
-                <i class="fab fa-playstation"></i>
-                <span>PS</span>
-            </a>
-            <a href="platform.php?platform=xbox" class="platform-btn xbox" title="Xbox">
-                <i class="fab fa-xbox"></i>
-                <span>Xbox</span>
-            </a>
-        </div>
-
-        <!-- ICONOS -->
+        <!-- ICONOS NAVEGACIÓN -->
         <div class="nav-icons">
             <!-- Noticias -->
             <a href="news.php" class="nav-icon" title="Noticias">
@@ -88,26 +80,95 @@ require_once 'includes/functions.php';
     </div>
 </header>
 
+<!-- BARRA DE PLATAFORMAS MÓVIL -->
+<div class="mobile-platforms-bar" id="mobilePlatformsBar">
+    <div class="mobile-platforms-content">
+        <a href="platform.php?platform=pc" class="mobile-platform-icon">
+            <i class="fas fa-desktop"></i>
+            <span>PC</span>
+        </a>
+        <a href="platform.php?platform=playstation" class="mobile-platform-icon">
+            <i class="fab fa-playstation"></i>
+            <span>PlayStation</span>
+        </a>
+        <a href="platform.php?platform=xbox" class="mobile-platform-icon">
+            <i class="fab fa-xbox"></i>
+            <span>Xbox</span>
+        </a>
+    </div>
+</div>
+
 <script>
-function toggleMobileSearch() {
-    const searchForm = document.getElementById('mobileSearchForm');
-    const searchInput = searchForm.querySelector('.mobile-search-input');
-    searchForm.classList.add('active');
-    searchInput.focus();
+function expandSearchInput() {
+    const platformsInside = document.getElementById('platformsInside');
+    const searchTriggerBtn = document.getElementById('searchTriggerBtn');
+    const searchInputForm = document.getElementById('searchInputForm');
+    const searchInputField = document.getElementById('searchInputField');
+    
+    // Ocultar plataformas y botón lupa
+    platformsInside.style.display = 'none';
+    searchTriggerBtn.style.display = 'none';
+    
+    // Mostrar input de búsqueda
+    searchInputForm.style.display = 'flex';
+    
+    // Enfocar el input
+    setTimeout(() => {
+        searchInputField.focus();
+    }, 100);
 }
 
-function closeMobileSearch() {
-    const searchForm = document.getElementById('mobileSearchForm');
-    searchForm.classList.remove('active');
+function collapseSearchInput() {
+    const platformsInside = document.getElementById('platformsInside');
+    const searchTriggerBtn = document.getElementById('searchTriggerBtn');
+    const searchInputForm = document.getElementById('searchInputForm');
+    const searchInputField = document.getElementById('searchInputField');
+    
+    // Limpiar input
+    searchInputField.value = '';
+    
+    // Ocultar input de búsqueda
+    searchInputForm.style.display = 'none';
+    
+    // Mostrar plataformas y botón lupa
+    platformsInside.style.display = 'flex';
+    searchTriggerBtn.style.display = 'flex';
 }
 
-// Cerrar búsqueda móvil si se hace clic fuera
-window.onclick = function(event) {
-    if (!event.target.closest('.mobile-search')) {
-        const searchForm = document.getElementById('mobileSearchForm');
-        if (searchForm && searchForm.classList.contains('active')) {
-            searchForm.classList.remove('active');
-        }
+// Cerrar con ESC
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        collapseSearchInput();
     }
-}
+});
+
+// Cerrar si se hace clic fuera
+document.addEventListener('click', function(e) {
+    const searchWithPlatforms = document.getElementById('searchWithPlatforms');
+    const searchInputForm = document.getElementById('searchInputForm');
+    
+    if (!searchWithPlatforms.contains(e.target) && searchInputForm.style.display === 'flex') {
+        collapseSearchInput();
+    }
+});
+
+// Script para ocultar/mostrar barra móvil al hacer scroll
+let lastScrollTop = 0;
+const mobilePlatformsBar = document.getElementById('mobilePlatformsBar');
+
+window.addEventListener('scroll', function() {
+    if (window.innerWidth <= 768) {
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        if (scrollTop > lastScrollTop) {
+            // Scrolling down - hide bar
+            mobilePlatformsBar.classList.add('hidden');
+        } else {
+            // Scrolling up - show bar
+            mobilePlatformsBar.classList.remove('hidden');
+        }
+        
+        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+    }
+});
 </script>
