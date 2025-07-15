@@ -66,7 +66,7 @@ session_start();
                     <!-- Los juegos se cargarán dinámicamente desde la BD -->
                     <div class="trending-card">
                         <div class="trending-image">
-                            <img src="images/cyberpunk2077.jpg" alt="Cyberpunk 2077">
+                            <img src="images/juegos/cyberpunk2077.jpg" alt="Cyberpunk 2077">
                             <div class="discount-badge">-25%</div>
                         </div>
                         <div class="trending-info">
