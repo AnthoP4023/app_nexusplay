@@ -2,7 +2,7 @@
 $host = "localhost";
 $username = "root";
 $password = ""; // Cambiar por la contraseña de MySQL en Ubuntu
-$database = "gamestore";
+$database = "basenueva";
 $port = 3306;
 
 $conn = new mysqli($host, $username, $password, $database, $port);
